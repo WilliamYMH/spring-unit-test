@@ -16,6 +16,7 @@ public class ManejadorObtenerCountry {
 
     @Transactional
     public Country ejecutar(String id) {
+        System.out.println("ejecutar - ManejadorObtenerCountry");
         return this.servicioObtenerCountry.ejecutar(id);
     }
 }

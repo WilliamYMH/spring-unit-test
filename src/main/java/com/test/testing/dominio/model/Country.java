@@ -77,7 +77,6 @@ public class Country {
 
     public Period calculateYearsOfIndependency() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-
         LocalDate localDate = LocalDate.parse(this.independenceDate, formatter);
         LocalDate today = LocalDate.now();
         return Period.between(localDate, today);

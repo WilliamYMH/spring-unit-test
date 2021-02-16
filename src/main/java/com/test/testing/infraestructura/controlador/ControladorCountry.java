@@ -1,41 +1,32 @@
 package com.test.testing.infraestructura.controlador;
 
+import com.test.testing.aplicacion.manejadores.ManejadorCrearCountry;
+import com.test.testing.aplicacion.manejadores.ManejadorObtenerCountry;
 import com.test.testing.dominio.model.Country;
-import com.test.testing.infraestructura.persistencia.entidad.CountryEntity;
-import com.test.testing.infraestructura.persistencia.repositorio.RepositorioCountryImpl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.Period;
-import java.util.Optional;
-
-/**
- * Author: VIP
- */
 @RestController()
+@RequestMapping("/country")
 public class ControladorCountry {
 
     Country country;
-    Optional<Country> countryOptional;
-    RepositorioCountryImpl countryRepositoryImpl;
-    //DiferenciaEntreFechas diferenciaEntreFechas;
+    ManejadorObtenerCountry manejadorObtenerCountry;
+    ManejadorCrearCountry manejadorCrearCountry;
 
-    public ControladorCountry(RepositorioCountryImpl countryRepositoryImpl) {
-        this.countryRepositoryImpl = countryRepositoryImpl;
-        //this.diferenciaEntreFechas = diferenciaEntreFechas;
+    public ControladorCountry(ManejadorCrearCountry manejadorCrearCountry, ManejadorObtenerCountry manejadorObtenerCountry) {
+        this.manejadorCrearCountry = manejadorCrearCountry;
+        this.manejadorObtenerCountry = manejadorObtenerCountry;
     }
 
-    @GetMapping(path = "/country/{countryId}")
+    @GetMapping(path = "/{countryId}")
     public ResponseEntity<Country> getCountryDetails(@PathVariable("countryId") String countryId) {
-        countryOptional = Optional.of(new Country());
-        country = null;
-
-        countryOptional = countryRepositoryImpl.obtenerCountryPorId(Long.parseLong(countryId));
-        if (countryOptional.isPresent()) {
-            country = new Country(countryOptional.get().getCountryName(), countryOptional.get().getCapitalName(), countryOptional.get().getIndependenceDate());
-        }
+        country = manejadorObtenerCountry.ejecutar(countryId);
         return ResponseEntity.ok(country);
+    }
+
+    @PostMapping(path = "/form")
+    public void addCountry(@RequestBody Country country) {
+        manejadorCrearCountry.ejecutar(country);
     }
 }
